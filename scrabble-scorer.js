@@ -2,6 +2,11 @@
 
 const input = require("readline-sync");
 
+// User to enter a word
+function initialPrompt() {
+   return input.question("Let's play some scrabble! Enter a word: ");
+}
+
 const oldPointStructure = {
   1: ['A', 'E', 'I', 'O', 'U', 'L', 'N', 'R', 'S', 'T'],
   2: ['D', 'G'],
@@ -27,45 +32,130 @@ function oldScrabbleScorer(word) {
 	  }
 	}
 	return letterPoints;
- }
-
-// your job is to finish writing these functions and variables that we've named //
-// don't change the names or your program won't work as expected. //
-
-function initialPrompt() {
-   console.log("Let's play some scrabble! Enter a word:");
-};
-
-let simpleScorer;
-
-let vowelBonusScorer;
-
-let scrabbleScorer;
-
-const scoringAlgorithms = [];
-
-function scorerPrompt() {}
-
-function transform() {};
-
-let newPointStructure;
-
-function runProgram() {
-   initialPrompt();
-   
 }
 
+// Scorer functions
+function simpleScorer(word) {
+  return word.length;
+  
+}
+
+function vowelBonusScorer(word) {
+  word = word.toUpperCase();
+  let score = 0;
+
+  for (let i = 0; i < word.length; i++) {
+    if ('AEIOU'.includes(word[i])) {
+      score += 3;
+    } else {
+      score++;
+    }
+  }
+
+  return score;
+}
+
+function scrabbleScorer(word, scoringObj) {
+  word = word.toUpperCase();
+  let score = 0;
+
+  for (let i = 0; i < word.length; i++) {
+    score += scoringObj[word[i]];
+  }
+
+  return score;
+}
+
+const scoringAlgorithms = [
+  { name: 'Simple Score', description: 'Each letter is worth 1 point.', scorerFunction: simpleScorer },
+  { name: 'Bonus Vowels', description: 'Vowels are 3 pts, consonants are 1 pt.', scorerFunction: vowelBonusScorer },
+  { name: 'Scrabble', description: 'The traditional scoring algorithm.', scorerFunction: scrabbleScorer }
+];
+
+function scorerPrompt() {
+  console.log("\nWhich scoring algorithm would you like to use?");
+  for (let i = 0; i < scoringAlgorithms.length; i++) {
+    console.log(`${i} - ${scoringAlgorithms[i].name}: ${scoringAlgorithms[i].description}`);
+  }
+  let choice = input.question("Enter 0, 1, or 2: ");
+  choice = parseInt(choice);
+  return choice;
+}
+
+function transform(oldPointStructure) {
+  let newPointStructure = {};
+
+  for (const pointValue in oldPointStructure) {
+    let letters = oldPointStructure[pointValue];
+
+    for (let i = 0; i < letters.length; i++) {
+      newPointStructure[letters[i].toLowerCase()] = parseInt(pointValue);
+    }
+  }
+
+  return newPointStructure;
+}
+
+let newPointStructure = transform(oldPointStructure);
+console.log("Scrabble scoring values for");
+console.log("letter a: ", newPointStructure.a);
+console.log("letter j: ", newPointStructure.j);
+console.log("letter z: ", newPointStructure["z"]);
+
+console.log("Letters with score '4':", oldPointStructure['4']);
+console.log("3rd letter within the key '4' array:", oldPointStructure['4'][2]);
+
+let letters = oldPointStructure['8'];
+console.log("Letters with score '8':", letters);
+console.log("2nd letter within the key '8' array:", letters[1]);
+
+
+
+
+function runProgram() {
+   let word = initialPrompt();
+   let choice = scorerPrompt();
+ 
+  let selectedScorer = scoringAlgorithms[choice].scorerFunction;
+   let score = selectedScorer(word, newPointStructure);
+ 
+   console.log(`Score for '${word}': ${score}`);
+ }
+ 
+//function runProgram() {
+  // console.log("Let's play some Scrabble!\n");
+ 
+  // const readline = require("readline").createInterface({
+     //input: process.stdin,
+    // output: process.stdout
+  // });
+ 
+   //readline.question("Enter a word to score: ", (word) => {
+    // readline.close();
+ 
+     // Validate the word input
+     //if (!/^[A-Za-z]+$/.test(word)) {
+     //  console.log("Invalid word. Please enter a valid word with letters only.");
+      // return runProgram();
+     //}
+ 
+     //const selectedAlgorithm = scorerPrompt();
+     //const score = selectedAlgorithm.scoringFunction(word);
+     //console.log(`Score for '${word}': ${score}`);
+   //});
+   
+ //}
 // Don't write any code below this line //
 // And don't change these or your program will not run as expected //
 module.exports = {
-   initialPrompt: initialPrompt,
-   transform: transform,
-   oldPointStructure: oldPointStructure,
-   simpleScorer: simpleScorer,
-   vowelBonusScorer: vowelBonusScorer,
-   scrabbleScorer: scrabbleScorer,
-   scoringAlgorithms: scoringAlgorithms,
-   newPointStructure: newPointStructure,
-	runProgram: runProgram,
-	scorerPrompt: scorerPrompt
+  initialPrompt: initialPrompt,
+  transform: transform,
+  oldPointStructure: oldPointStructure,
+  simpleScorer: simpleScorer,
+  vowelBonusScorer: vowelBonusScorer,
+  scrabbleScorer: scrabbleScorer,
+  scoringAlgorithms: scoringAlgorithms,
+  newPointStructure: newPointStructure,
+  runProgram: runProgram,
+  scorerPrompt: scorerPrompt
 };
