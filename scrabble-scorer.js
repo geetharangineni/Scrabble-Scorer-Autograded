@@ -122,31 +122,7 @@ function runProgram() {
    console.log(`Score for '${word}': ${score}`);
  }
  
-//function runProgram() {
-  // console.log("Let's play some Scrabble!\n");
- 
-  // const readline = require("readline").createInterface({
-     //input: process.stdin,
-    // output: process.stdout
-  // });
- 
-   //readline.question("Enter a word to score: ", (word) => {
-    // readline.close();
- 
-     // Validate the word input
-     //if (!/^[A-Za-z]+$/.test(word)) {
-     //  console.log("Invalid word. Please enter a valid word with letters only.");
-      // return runProgram();
-     //}
- 
-     //const selectedAlgorithm = scorerPrompt();
-     //const score = selectedAlgorithm.scoringFunction(word);
-     //console.log(`Score for '${word}': ${score}`);
-   //});
-   
- //}
-// Don't write any code below this line //
-// And don't change these or your program will not run as expected //
+
 module.exports = {
   initialPrompt: initialPrompt,
   transform: transform,
